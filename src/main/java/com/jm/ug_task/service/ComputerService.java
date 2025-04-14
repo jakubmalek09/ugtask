@@ -3,10 +3,7 @@ package com.jm.ug_task.service;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.jm.ug_task.model.Bill;
-import com.jm.ug_task.model.Computer;
-import com.jm.ug_task.model.ComputerEntity;
-import com.jm.ug_task.model.NPBResponseDTO;
+import com.jm.ug_task.model.*;
 import com.jm.ug_task.repository.ComputerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,6 +93,7 @@ public class ComputerService {
         LocalDate minus7DaysDate = date.minusDays(7);
         String url = String.format("https://api.nbp.pl/api/exchangerates/rates/A/USD/%s/%s/?format=json", minus7DaysDate, date);
         ResponseEntity<NPBResponseDTO> response = restTemplate.getForEntity(url, NPBResponseDTO.class);
-        return response.getBody().getRates().get(0).getMid();
+        List<CurrencyRate> rates = response.getBody().getRates();
+        return rates.get(rates.size() - 1).getMid();
     }
 }
